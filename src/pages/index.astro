@@ -2,7 +2,12 @@
 import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import { SITE_TITLE, SITE_DESCRIPTION, CONTACT_EMAIL, CONTACT_PHONE } from '../consts';
+import { getCollection } from 'astro:content';
+
+const recent = (await getCollection('engagements'))
+	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+	.slice(0, 4);
 ---
 
 <!doctype html>
@@ -13,38 +18,86 @@ import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
 	<body>
 		<Header />
 		<main>
-			<h1>🧑‍🚀 Hello, Astronaut!</h1>
-			<p>
-				Welcome to the official <a href="https://astro.build/">Astro</a> blog starter template. This
-				template serves as a lightweight, minimally-styled starting point for anyone looking to build
-				a personal website, blog, or portfolio with Astro.
+			<h1>Enterprise architecture that starts with the business</h1>
+
+			<p class="lede">
+				Gravitaz Ltd is an independent enterprise architecture practice that sees through technology
+				to the underlying business architecture.
 			</p>
+
 			<p>
-				This template comes with a few integrations already configured in your
-				<code>astro.config.mjs</code> file. You can customize your setup with
-				<a href="https://astro.build/integrations">Astro Integrations</a> to add tools like Tailwind,
-				React, or Vue to your project.
+				Gravitaz uses capability mapping and quality-property-driven governance to establish what a
+				business actually needs, then applies deep hands-on digital and eCommerce platform
+				experience to the buy-versus-build decision — and to holding suppliers and internal teams to
+				account through delivery.
 			</p>
-			<p>Here are a few ideas on how to get started with the template:</p>
+
+			<h2>How Gravitaz engages</h2>
+			<p>
+				As an interim or fractional architecture lead, typically for three to twelve months: assess,
+				define and de-risk a transformation, then hand over a working practice. The aim is a client
+				team that no longer needs the engagement.
+			</p>
+
+			<h2>Where it adds value</h2>
 			<ul>
-				<li>Edit this page in <code>src/pages/index.astro</code></li>
-				<li>Edit the site header items in <code>src/components/Header.astro</code></li>
-				<li>Add your name to the footer in <code>src/components/Footer.astro</code></li>
-				<li>Check out the included blog posts in <code>src/content/blog/</code></li>
-				<li>Customize the blog post page layout in <code>src/layouts/BlogPost.astro</code></li>
+				<li>
+					<strong>Business architecture and method</strong> — capability-based models of the business,
+					independent of technology or supplier; ISO 25010 quality characteristics agreed and
+					assigned to named stakeholders as real architectural concerns; architecture practice
+					established where none existed. TOGAF 9 certified.
+				</li>
+				<li>
+					<strong>Digital and eCommerce depth</strong> — SAP Commerce Cloud, commercetools, Adobe
+					Commerce, Shopify and BigCommerce; composable and MACH architectures; AWS and Azure; CIAM,
+					privacy and GDPR compliance. Still hands-on where it counts.
+				</li>
+				<li>
+					<strong>Buy and build judgment</strong> — supplier selection against a capability model,
+					technical due diligence, and the confidence to recommend against a re-platform the
+					organisation is not resourced to sustain.
+				</li>
 			</ul>
+
+			<h2>Recent engagements</h2>
+			<ul class="recent">
+				{
+					recent.map((engagement) => (
+						<li>
+							<a href={`/engagements/${engagement.id}/`}>{engagement.data.title}</a>
+							<span class="period">{engagement.data.period}</span>
+						</li>
+					))
+				}
+			</ul>
+			<p><a href="/engagements">All engagements &rarr;</a></p>
+
+			<h2>Get in touch</h2>
 			<p>
-				Have fun! If you get stuck, remember to <a href="https://docs.astro.build/"
-					>read the docs
-				</a> or <a href="https://astro.build/chat">join us on Discord</a> to ask questions.
-			</p>
-			<p>
-				Looking for a blog template with a bit more personality? Check out <a
-					href="https://github.com/Charca/astro-blog-template"
-					>astro-blog-template
-				</a> by <a href="https://twitter.com/Charca">Maxi Ferreira</a>.
+				<a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a><br />
+				<a href={`tel:${CONTACT_PHONE.replace(/\s/g, '')}`}>{CONTACT_PHONE}</a><br />
+				United Kingdom — willing to travel
 			</p>
 		</main>
 		<Footer />
 	</body>
 </html>
+
+<style>
+	.lede {
+		font-size: 1.15em;
+		color: rgb(var(--gray-dark));
+	}
+	li {
+		margin-bottom: 0.75em;
+	}
+	.recent {
+		list-style-type: none;
+		padding: 0;
+	}
+	.recent .period {
+		display: block;
+		color: rgb(var(--gray));
+		font-size: 0.9em;
+	}
+</style>
